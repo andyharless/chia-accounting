@@ -5,7 +5,12 @@ import os
 import sys
 import pandas as pd
 
-sys.path.append('..')
+REPO_ROOT = '..'
+coderoot = os.getenv("CHIA_CODE_ROOT")
+if coderoot is None:
+    coderoot = '../..'
+sys.path.append(coderoot)
+sys.path.append(REPO_ROOT)
 
 from time import sleep
 from local_data import cert_path

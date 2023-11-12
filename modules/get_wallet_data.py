@@ -14,6 +14,7 @@ sys.path.append(REPO_ROOT)
 
 from time import sleep
 from local_data import cert_path
+from .get_block_data import get_block_time
 
 WAIT_INTERVAL = 2
 WAIT_COMPLAIN = 10
@@ -100,7 +101,7 @@ def get_cat_names(wallet=None, cert=cert):
         namelist[w['id']] = w['name']
     
     return namelist
-    
+    chia_accounting
     
 def get_cat_symbol(name):
 
@@ -119,4 +120,14 @@ def get_cat_symbol(name):
 def get_cat_symbols(cat_names):
     
     return [get_cat_symbol(name) for name in cat_names]
-        
+
+
+def get_xch_balances(wallet=None, cert=cert):
+
+    XCH = 1
+    df = get_transactions(get_coin_records(wallet, cert=cert))
+    xch = df[df.wallet == XCH][['block', 'delta']].copy()
+    xch['balance'] = xch.delta.cumsum() / 1e12
+    xch['time'] = xch.block.apply(lambda x: get_block_time(x))
+    return xch[['time', 'balance']]
+    

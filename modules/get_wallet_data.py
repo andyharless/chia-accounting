@@ -101,7 +101,7 @@ def get_cat_names(wallet=None, cert=cert):
         namelist[w['id']] = w['name']
     
     return namelist
-    chia_accounting
+
     
 def get_cat_symbol(name):
 

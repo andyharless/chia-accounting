@@ -131,3 +131,23 @@ def get_xch_balances(wallet=None, cert=cert):
     xch['time'] = xch.block.apply(lambda x: get_block_time(x))
     return xch[['time', 'balance']]
     
+
+def get_wallet_id_for_token(token):
+
+    id_from_env = os.getenv(token)
+    if id_from_env is not None:
+        return int(id_from_env)
+    else:
+        return NotImplementedError
+
+
+def get_token_balances(wallet=None, token='XCH', cert=cert):
+
+    # Assumes wallet id for token is stored as a local environment variable
+    wallet_id = get_wallet_id_for_token(token)
+    df = get_transactions(get_coin_records(wallet, cert=cert))
+    tok = df[df.wallet == wallet_id][['block', 'delta']].copy()
+    tok['balance'] = tok.delta.cumsum() / (1e12 if token == 'XCH' else 1e3)
+    tok['time'] = tok.block.apply(lambda x: get_block_time(x))
+    return tok[['time', 'balance']]
+    
